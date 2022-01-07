@@ -2,20 +2,20 @@
 
 import Data.Vect
 
-createEmpties : {n: _} -> Vect n (Vect 0 elem)
+createEmpties : {n: _} -> Vect n (Vect 0 a)
 createEmpties = replicate _ []
 
-transposeHelper : (x : Vect n elem)
-               -> (xsTrans : Vect n (Vect k elem))
-               -> Vect n (Vect (S k) elem)
+transposeHelper : (x : Vect n a)
+               -> (xsTrans : Vect n (Vect k a))
+               -> Vect n (Vect (S k) a)
 transposeHelper [] [] = []
 transposeHelper (x :: xs) (y :: ys) = (x :: y) :: transposeHelper xs ys
 
-transposeMat : {n: _} -> Vect m (Vect n elem) -> Vect n (Vect m elem)
+transposeMat : {n: _} -> Vect m (Vect n a) -> Vect n (Vect m a)
 transposeMat [] = createEmpties
 transposeMat (x :: xs) = let xsTrans = transposeMat xs in transposeHelper x xsTrans
 
-transposeMat2 : {n: _} -> Vect m (Vect n elem) -> Vect n (Vect m elem)
+transposeMat2 : {n: _} -> Vect m (Vect n a) -> Vect n (Vect m a)
 transposeMat2 [] = createEmpties
 transposeMat2 (x :: xs) = let xsTrans = transposeMat2 xs in zipWith (::) x xsTrans
 
