@@ -34,3 +34,8 @@ vectTake (FS x) (y :: xs) = y :: vectTake x xs
 ||| Returns Nothing if index is out of bounds
 sumEntries : Num a => {n : _} -> (pos : Integer) -> Vect n a -> Vect n a -> Maybe a
 sumEntries pos xs ys = map (\idx => index idx xs + index idx ys) $ integerToFin pos n
+
+||| Sums entries at index i for Vects of identical lengths
+||| Returns Nothing if index is out of bounds
+sumEntries' : Num a => {n : _} -> (pos : Integer) -> Vect n a -> Vect n a -> Maybe a
+sumEntries' pos xs ys = let f = tryIndex pos in [| f xs + f ys |]
