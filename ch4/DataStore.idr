@@ -25,30 +25,43 @@ addToStore (MkData size items) newitem = MkData _ (addToData items)
 
 getItem : Integer -> DataStore -> Maybe (String, DataStore)
 getItem i store@(MkData size items) = case integerToFin i size of
-                                     Nothing => Just ("Entry not found", store)
+                                     Nothing => Just ("Entry not found\n", store)
                                      Just i => Just (index i items ++ "\n", store)
+
+search : String -> DataStore -> Maybe (String, DataStore)
+search substr store@(MkData size items) = Just (searchItems items, store) where 
+                                          searchItems : Vect n String -> String
+                                          searchItems [] = "No entries with " ++ substr ++ " found\n"
+                                          searchItems (x :: xs) = case isInfixOf substr x of
+                                                                        False => searchItems xs
+                                                                        True => show (length xs) ++ ": " ++ x ++ "\n"
 
 -- REPL UI
 
 data Command = Add String
              | Get Integer
+             | Search String
+             | Size
              | Quit
 
 parseCommand : String -> String -> Maybe Command
-parseCommand "add" str = Just (Add str)
-parseCommand "get" i   = map (\i => Get i) (parseInteger i) 
-parseCommand "quit" _  = Just Quit
-parseCommand _ _       = Nothing
+parseCommand cmd input = case cmd of
+                              "add" => Just (Add input)
+                              "get" => map (\i => Get i) (parseInteger input)
+                              "search" => Just (Search input)
+                              "size" => Just Size
+                              "quit" => Just Quit
+                              _ => Nothing
 
 parse : (input : String) -> Maybe Command
 parse input = case span (/= ' ') input of
                    (cmd, args) => parseCommand cmd (ltrim args)
 
-
-
 processCommand : DataStore -> Command -> Maybe (String, DataStore)
 processCommand store (Add str) = Just ("Added ID " ++ show (size store) ++ " to store\n", addToStore store str)
 processCommand store (Get i) = getItem i store
+processCommand store Size = Just (show (size store) ++ " entries in store\n", store)
+processCommand store (Search substr) = search substr store
 processCommand _ Quit = Nothing
 
 processInput : DataStore -> String -> Maybe (String, DataStore)
