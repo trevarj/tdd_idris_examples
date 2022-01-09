@@ -15,6 +15,6 @@ my_map : (a -> b) -> List a -> List b
 my_map _ [] = []
 my_map f (x :: xs) = f x :: my_map f xs
 
-my_map_vect : (a -> b) -> Vect n a -> Vect n b
-my_map_vect _ [] = []
-my_map_vect f (x :: xs) = f x :: my_map_vect f xs
+my_vect_map : (a -> b) -> Vect n a -> Vect n b
+my_vect_map _ [] = []
+my_vect_map f (x :: xs) = f x :: my_vect_map f xs
