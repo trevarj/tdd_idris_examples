@@ -3,6 +3,11 @@ data Tree elem = Empty
                | Node (Tree elem) elem (Tree elem)
 %name Tree left, val, right
 
+Eq elem => Eq (Tree elem) where
+    (==) Empty Empty = ?Eq_rhs1_2
+    (==) (Node left e right) (Node left' e' right') = left == left' && e == e' && right == right'
+    (==) _ _ = False
+
 insert : Ord elem => elem -> Tree elem -> Tree elem
 insert x Empty = Node Empty x Empty
 insert x orig@(Node left val right) = case compare x val of
