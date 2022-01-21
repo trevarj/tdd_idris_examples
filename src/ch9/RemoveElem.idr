@@ -12,6 +12,7 @@ import Data.Vect.Elem
 --                   Vect n a
 -- removeElem_auto value xs = removeElem value xs prf
 
+public export
 removeElem : {n : _ } -> 
              (value : a) -> 
              (xs : Vect (S n) a) -> 
